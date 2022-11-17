@@ -1,0 +1,838 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "a1773976",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Requirement already satisfied: tensorflow in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (2.7.2)\n",
+      "Collecting tensorflow\n",
+      "  Downloading tensorflow-2.10.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (578.1 MB)\n",
+      "\u001b[K     |████████████████████████████████| 578.1 MB 48 kB/s s eta 0:00:01/s eta 0:00:38[K     |▎                               | 5.4 MB 15.6 MB/s eta 0:00:3735 MB 15.6 MB/s eta 0:00:34 |████▍                           | 79.0 MB 15.6 MB/s eta 0:00:33███                           | 89.6 MB 15.6 MB/s eta 0:00:32█▉                          | 105.6 MB 90.1 MB/s eta 0:00:06MB 90.1 MB/s eta 0:00:06��███▋                        | 138.0 MB 90.1 MB/s eta 0:00:05��███▏                      | 165.0 MB 90.1 MB/s eta 0:00:05 eta 0:00:05█▏                    | 201.1 MB 88.9 MB/s eta 0:00:05█▍                    | 206.2 MB 88.9 MB/s eta 0:00:059 MB/s eta 0:00:04�█████████▌                 | 261.2 MB 88.9 MB/s eta 0:00:04:00:03        | 413.5 MB 90.0 MB/s eta 0:00:02�████████▌     | 479.2 MB 113 kB/s eta 0:14:29��████████▍    | 495.1 MB 113 kB/s eta 0:12:09��█████████████▋    | 499.5 MB 15.7 MB/s eta 0:00:06��█████████████▉    | 503.6 MB 15.7 MB/s eta 0:00:05��██████████████    | 506.5 MB 15.7 MB/s eta 0:00:05��█████████████████████████   | 522.2 MB 15.7 MB/s eta 0:00:04\n",
+      "\u001b[?25hCollecting absl-py>=1.0.0\n",
+      "  Downloading absl_py-1.3.0-py3-none-any.whl (124 kB)\n",
+      "\u001b[K     |████████████████████████████████| 124 kB 75.2 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: astunparse>=1.6.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.6.3)\n",
+      "Requirement already satisfied: grpcio<2.0,>=1.24.3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.42.0)\n",
+      "Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (0.23.1)\n",
+      "Collecting tensorboard<2.11,>=2.10\n",
+      "  Downloading tensorboard-2.10.1-py3-none-any.whl (5.9 MB)\n",
+      "\u001b[K     |████████████████████████████████| 5.9 MB 88.8 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: gast<=0.4.0,>=0.2.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (0.4.0)\n",
+      "Requirement already satisfied: google-pasta>=0.1.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (0.2.0)\n",
+      "Requirement already satisfied: numpy>=1.20 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.20.3)\n",
+      "Requirement already satisfied: setuptools in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (58.0.4)\n",
+      "Requirement already satisfied: keras-preprocessing>=1.1.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.1.2)\n",
+      "Requirement already satisfied: protobuf<3.20,>=3.9.2 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (3.19.1)\n",
+      "Requirement already satisfied: h5py>=2.9.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (3.2.1)\n",
+      "Requirement already satisfied: termcolor>=1.1.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.1.0)\n",
+      "Requirement already satisfied: wrapt>=1.11.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.12.1)\n",
+      "Collecting libclang>=13.0.0\n",
+      "  Downloading libclang-14.0.6-py2.py3-none-manylinux2010_x86_64.whl (14.1 MB)\n",
+      "\u001b[K     |████████████████████████████████| 14.1 MB 84.5 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: packaging in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (21.3)\n",
+      "Collecting keras<2.11,>=2.10.0\n",
+      "  Downloading keras-2.10.0-py2.py3-none-any.whl (1.7 MB)\n",
+      "\u001b[K     |████████████████████████████████| 1.7 MB 93.7 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: flatbuffers>=2.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (2.0)\n",
+      "Collecting tensorflow-estimator<2.11,>=2.10.0\n",
+      "  Downloading tensorflow_estimator-2.10.0-py2.py3-none-any.whl (438 kB)\n",
+      "\u001b[K     |████████████████████████████████| 438 kB 95.8 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: typing-extensions>=3.6.6 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (4.1.1)\n",
+      "Requirement already satisfied: opt-einsum>=2.3.2 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (3.3.0)\n",
+      "Requirement already satisfied: six>=1.12.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorflow) (1.15.0)\n",
+      "Requirement already satisfied: wheel<1.0,>=0.23.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from astunparse>=1.6.0->tensorflow) (0.37.0)\n",
+      "Requirement already satisfied: tensorboard-data-server<0.7.0,>=0.6.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (0.6.1)\n",
+      "Requirement already satisfied: requests<3,>=2.21.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (2.26.0)\n",
+      "Requirement already satisfied: werkzeug>=1.0.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (2.0.2)\n",
+      "Requirement already satisfied: google-auth-oauthlib<0.5,>=0.4.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (0.4.4)\n",
+      "Requirement already satisfied: tensorboard-plugin-wit>=1.6.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (1.6.0)\n",
+      "Requirement already satisfied: google-auth<3,>=1.6.3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (1.23.0)\n",
+      "Requirement already satisfied: markdown>=2.6.8 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from tensorboard<2.11,>=2.10->tensorflow) (3.3.3)\n",
+      "Requirement already satisfied: pyasn1-modules>=0.2.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow) (0.2.8)\n",
+      "Requirement already satisfied: cachetools<5.0,>=2.0.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow) (4.2.2)\n",
+      "Requirement already satisfied: rsa<5,>=3.1.4 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow) (4.7.2)\n",
+      "Requirement already satisfied: requests-oauthlib>=0.7.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow) (1.3.0)\n",
+      "Requirement already satisfied: pyasn1<0.5.0,>=0.4.6 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from pyasn1-modules>=0.2.1->google-auth<3,>=1.6.3->tensorboard<2.11,>=2.10->tensorflow) (0.4.8)\n",
+      "Requirement already satisfied: urllib3<1.27,>=1.21.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow) (1.26.7)\n",
+      "Requirement already satisfied: charset-normalizer~=2.0.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow) (2.0.4)\n",
+      "Requirement already satisfied: idna<4,>=2.5 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow) (3.3)\n",
+      "Requirement already satisfied: certifi>=2017.4.17 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests<3,>=2.21.0->tensorboard<2.11,>=2.10->tensorflow) (2022.9.24)\n",
+      "Requirement already satisfied: oauthlib>=3.0.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard<2.11,>=2.10->tensorflow) (3.2.1)\n",
+      "Requirement already satisfied: pyparsing!=3.0.5,>=2.0.2 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from packaging->tensorflow) (3.0.4)\n",
+      "Installing collected packages: absl-py, tensorflow-estimator, tensorboard, libclang, keras, tensorflow\n",
+      "  Attempting uninstall: absl-py\n",
+      "    Found existing installation: absl-py 0.12.0\n",
+      "    Uninstalling absl-py-0.12.0:\n",
+      "      Successfully uninstalled absl-py-0.12.0\n",
+      "  Attempting uninstall: tensorflow-estimator\n",
+      "    Found existing installation: tensorflow-estimator 2.7.0\n",
+      "    Uninstalling tensorflow-estimator-2.7.0:\n",
+      "      Successfully uninstalled tensorflow-estimator-2.7.0\n",
+      "  Attempting uninstall: tensorboard\n",
+      "    Found existing installation: tensorboard 2.7.0\n",
+      "    Uninstalling tensorboard-2.7.0:\n",
+      "      Successfully uninstalled tensorboard-2.7.0\n",
+      "  Attempting uninstall: keras\n",
+      "    Found existing installation: keras 2.7.0\n",
+      "    Uninstalling keras-2.7.0:\n",
+      "      Successfully uninstalled keras-2.7.0\n",
+      "  Attempting uninstall: tensorflow\n",
+      "    Found existing installation: tensorflow 2.7.2\n",
+      "    Uninstalling tensorflow-2.7.2:\n",
+      "      Successfully uninstalled tensorflow-2.7.2\n",
+      "\u001b[31mERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\n",
+      "tensorflow-text 2.7.3 requires tensorflow<2.8,>=2.7.0, but you have tensorflow 2.10.1 which is incompatible.\n",
+      "tensorflow-metadata 1.5.0 requires absl-py<0.13,>=0.9, but you have absl-py 1.3.0 which is incompatible.\n",
+      "autoai-ts-libs 1.1.9 requires tensorflow<2.8,>=2.7.0; python_version >= \"3.9\", but you have tensorflow 2.10.1 which is incompatible.\u001b[0m\n",
+      "Successfully installed absl-py-1.3.0 keras-2.10.0 libclang-14.0.6 tensorboard-2.10.1 tensorflow-2.10.1 tensorflow-estimator-2.10.0\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install tensorflow --upgrade"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "c9226164",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "##Importing The Required Libraries\n",
+    "import numpy as np\n",
+    "import tensorflow #open source used for both ML and DL for computation\n",
+    "from tensorflow.keras.datasets import mnist #mnist dataset\n",
+    "from tensorflow.keras.models import Sequential #it is a plain stack of layers\n",
+    "from tensorflow.keras import layers #A Layer consists of a tensor- in tensor-out computat ion funct ion\n",
+    "from tensorflow.keras.layers import Dense, Flatten #Dense-Dense Layer is the regular deeply connected r\n",
+    "#faltten -used fot flattening the input or change the dimension\n",
+    "from tensorflow.keras.layers import Conv2D #onvoLutiona l Layer\n",
+    "from tensorflow.keras.optimizers import Adam #opt imizer\n",
+    "from keras. utils import np_utils #used for one-hot encoding\n",
+    "import matplotlib.pyplot as plt   #used for data visualization"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "a5730bec",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz\n",
+      "11490434/11490434 [==============================] - 0s 0us/step\n"
+     ]
+    }
+   ],
+   "source": [
+    "(x_train, y_train), (x_test, y_test)=mnist.load_data () #splitting the mnist data into train and test\n",
+    "x_train=x_train.reshape (60000, 28, 28, 1).astype('float32')\n",
+    "x_test=x_test.reshape (10000, 28, 28, 1).astype ('float32')\n",
+    "number_of_classes = 10  #storing the no of classes in a variable\n",
+    "y_train = np_utils.to_categorical (y_train, number_of_classes) #converts the output in binary format\n",
+    "y_test = np_utils.to_categorical (y_test, number_of_classes)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "f41927a1",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2022-11-16 12:59:09.639665: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /opt/ibm/dsdriver/lib:/opt/oracle/lib:/opt/conda/envs/Python-3.9/lib/python3.9/site-packages/tensorflow\n",
+      "2022-11-16 12:59:09.639703: W tensorflow/stream_executor/cuda/cuda_driver.cc:263] failed call to cuInit: UNKNOWN ERROR (303)\n"
+     ]
+    }
+   ],
+   "source": [
+    "#create model\n",
+    "model=Sequential ()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "d2b0e3b2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#adding modeL Layer\n",
+    "model.add(Conv2D(64, (3, 3), input_shape=(28, 28, 1), activation='relu'))\n",
+    "model.add(Conv2D(32, (3, 3), activation = 'relu'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "fb250d7d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#flatten the dimension of the image\n",
+    "model.add(Flatten())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "8d260558",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#output layer with 10 neurons\n",
+    "model.add(Dense(number_of_classes,activation = 'softmax'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "cc5ee629",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Compile model\n",
+    "model.compile(loss= 'categorical_crossentropy', optimizer=\"Adam\", metrics=['accuracy'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "f43d1b2f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train = np.asarray(x_train)\n",
+    "y_train = np.asarray(y_train)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "8afb955b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Epoch 1/5\n",
+      "1875/1875 [==============================] - 110s 58ms/step - loss: 0.2873 - accuracy: 0.9485 - val_loss: 0.1104 - val_accuracy: 0.9682\n",
+      "Epoch 2/5\n",
+      "1875/1875 [==============================] - 108s 58ms/step - loss: 0.0711 - accuracy: 0.9789 - val_loss: 0.0834 - val_accuracy: 0.9754\n",
+      "Epoch 3/5\n",
+      "1875/1875 [==============================] - 109s 58ms/step - loss: 0.0498 - accuracy: 0.9846 - val_loss: 0.0916 - val_accuracy: 0.9790\n",
+      "Epoch 4/5\n",
+      "1875/1875 [==============================] - 111s 59ms/step - loss: 0.0399 - accuracy: 0.9872 - val_loss: 0.0983 - val_accuracy: 0.9777\n",
+      "Epoch 5/5\n",
+      "1875/1875 [==============================] - 110s 59ms/step - loss: 0.0299 - accuracy: 0.9908 - val_loss: 0.0944 - val_accuracy: 0.9767\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "<keras.callbacks.History at 0x7f909c427ee0>"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#fit the model\n",
+    "model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=5, batch_size=32)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "b9c68d11",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Metrics (Test loss &Test Accuracy) : \n",
+      "[0.09443268924951553, 0.9767000079154968]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Final evaluation of the model\n",
+    "metrics = model.evaluate(x_test, y_test, verbose=0)\n",
+    "print(\"Metrics (Test loss &Test Accuracy) : \")\n",
+    "print(metrics)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "bccfbb7e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1/1 [==============================] - 0s 84ms/step\n",
+      "[[6.0789312e-12 3.8740800e-14 5.5244988e-12 2.3392662e-05 5.0168368e-05\n",
+      "  2.1624928e-08 2.5041163e-17 1.9225256e-07 3.6426626e-09 9.9992621e-01]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "prediction=model.predict(x_test[6000:6001])\n",
+    "print(prediction)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "3e1a12d0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.image.AxesImage at 0x7f909568c9a0>"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "plt.imshow(x_test[6000])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "a3e07eef",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[9]\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "print(np.argmax(prediction, axis=1)) #printing our Labels from first 4 images"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "b0065258",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Save the model\n",
+    "model.save('models/mnistCNN.h5')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "5195ef64",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "/home/wsuser/work/models\n"
+     ]
+    }
+   ],
+   "source": [
+    "cd models"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "6fa0e2b7",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "tar: mnistCNN.h5: Cannot stat: No such file or directory\r\n",
+      "tar: Exiting with failure status due to previous errors\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!tar -zcvf handwritten-digit-recognition-model_new.tgz mnistCNN.h5"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "7a277b9a",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting watson-machine-learning-client\n",
+      "  Downloading watson_machine_learning_client-1.0.391-py3-none-any.whl (538 kB)\n",
+      "\u001b[K     |████████████████████████████████| 538 kB 22.3 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: urllib3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (1.26.7)\n",
+      "Requirement already satisfied: certifi in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (2022.9.24)\n",
+      "Requirement already satisfied: ibm-cos-sdk in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (2.11.0)\n",
+      "Requirement already satisfied: tqdm in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (4.62.3)\n",
+      "Requirement already satisfied: pandas in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (1.3.4)\n",
+      "Requirement already satisfied: boto3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (1.18.21)\n",
+      "Requirement already satisfied: tabulate in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (0.8.9)\n",
+      "Requirement already satisfied: lomond in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (0.3.3)\n",
+      "Requirement already satisfied: requests in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from watson-machine-learning-client) (2.26.0)\n",
+      "Requirement already satisfied: s3transfer<0.6.0,>=0.5.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from boto3->watson-machine-learning-client) (0.5.0)\n",
+      "Requirement already satisfied: botocore<1.22.0,>=1.21.21 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from boto3->watson-machine-learning-client) (1.21.41)\n",
+      "Requirement already satisfied: jmespath<1.0.0,>=0.7.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from boto3->watson-machine-learning-client) (0.10.0)\n",
+      "Requirement already satisfied: python-dateutil<3.0.0,>=2.1 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from botocore<1.22.0,>=1.21.21->boto3->watson-machine-learning-client) (2.8.2)\n",
+      "Requirement already satisfied: six>=1.5 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from python-dateutil<3.0.0,>=2.1->botocore<1.22.0,>=1.21.21->boto3->watson-machine-learning-client) (1.15.0)\n",
+      "Requirement already satisfied: ibm-cos-sdk-s3transfer==2.11.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from ibm-cos-sdk->watson-machine-learning-client) (2.11.0)\n",
+      "Requirement already satisfied: ibm-cos-sdk-core==2.11.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from ibm-cos-sdk->watson-machine-learning-client) (2.11.0)\n",
+      "Requirement already satisfied: charset-normalizer~=2.0.0 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests->watson-machine-learning-client) (2.0.4)\n",
+      "Requirement already satisfied: idna<4,>=2.5 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from requests->watson-machine-learning-client) (3.3)\n",
+      "Requirement already satisfied: pytz>=2017.3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from pandas->watson-machine-learning-client) (2021.3)\n",
+      "Requirement already satisfied: numpy>=1.17.3 in /opt/conda/envs/Python-3.9/lib/python3.9/site-packages (from pandas->watson-machine-learning-client) (1.20.3)\n",
+      "Installing collected packages: watson-machine-learning-client\n",
+      "Successfully installed watson-machine-learning-client-1.0.391\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install watson-machine-learning-client --upgrade"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "c9039666",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<ibm_watson_machine_learning.client.APIClient at 0x7fd435f7eca0>"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from ibm_watson_machine_learning import APIClient\n",
+    "credentials ={\n",
+    "    \"url\":\"https://us-south.ml.cloud.ibm.com\",\n",
+    "    \"apikey\":\"A8rMaArx-57YLFSbkYzNmfy4v4LH-LNztseSzpfQBICI\"\n",
+    "}\n",
+    "client = APIClient(credentials)\n",
+    "client\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "943efaf5",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'resources': [{'entity': {'compute': [{'crn': 'crn:v1:bluemix:public:pm-20:us-south:a/9398437053b64bedb7c1cf49ef2d8ab7:deb53786-6a2b-4124-8f40-55ae6614cc52::',\n",
+       "      'guid': 'deb53786-6a2b-4124-8f40-55ae6614cc52',\n",
+       "      'name': 'Watson Machine Learning-xn',\n",
+       "      'type': 'machine_learning'}],\n",
+       "    'description': '',\n",
+       "    'name': 'digitrecognition',\n",
+       "    'scope': {'bss_account_id': '9398437053b64bedb7c1cf49ef2d8ab7'},\n",
+       "    'stage': {'production': False},\n",
+       "    'status': {'state': 'active'},\n",
+       "    'storage': {'properties': {'bucket_name': 'e1d61406-f148-4b3e-a75a-033adadeb68b',\n",
+       "      'bucket_region': 'us-south',\n",
+       "      'credentials': {'admin': {'access_key_id': 'b7881ffbae0c4ba99fecfc7a3e4aec0a',\n",
+       "        'api_key': 'pEhUzKUB7J4T_S4OObPZXOjTu65lwZ3PYiinKnWxIra4',\n",
+       "        'secret_access_key': '1976997954945478dc3db05afec77ea9bef4536bf0f2233a',\n",
+       "        'service_id': 'ServiceId-150f34ac-3dd9-4abe-9788-e008cfd2835d'},\n",
+       "       'editor': {'access_key_id': '88220a1487bd4cb69c686f7aa56a2b46',\n",
+       "        'api_key': 'zi4ieRUsL8NoPYPX6OV4K9a-ZbvBZE9eNr7D6gv6PaFQ',\n",
+       "        'resource_key_crn': 'crn:v1:bluemix:public:cloud-object-storage:global:a/9398437053b64bedb7c1cf49ef2d8ab7:780b6522-a42e-46f6-9e27-9267cd35d0e1::',\n",
+       "        'secret_access_key': '9a0c2fc6080e8964286dd96a6d8fad1349594b59d1dcd03c',\n",
+       "        'service_id': 'ServiceId-14966891-e7cc-4c18-a600-d0041dd69447'},\n",
+       "       'viewer': {'access_key_id': 'e45db92e9a7841babc0915098d9defd1',\n",
+       "        'api_key': 'v11N6uUxbNdQUz0Kc6Xos5iAIOumy2rNuy5XwumMoRoM',\n",
+       "        'resource_key_crn': 'crn:v1:bluemix:public:cloud-object-storage:global:a/9398437053b64bedb7c1cf49ef2d8ab7:780b6522-a42e-46f6-9e27-9267cd35d0e1::',\n",
+       "        'secret_access_key': 'd3cc06d40cb9265b2ff2cfda00a7bc08b9ae443331ff1816',\n",
+       "        'service_id': 'ServiceId-3db163a9-3396-4a89-994d-b22f212d270a'}},\n",
+       "      'endpoint_url': 'https://s3.us-south.cloud-object-storage.appdomain.cloud',\n",
+       "      'guid': '780b6522-a42e-46f6-9e27-9267cd35d0e1',\n",
+       "      'resource_crn': 'crn:v1:bluemix:public:cloud-object-storage:global:a/9398437053b64bedb7c1cf49ef2d8ab7:780b6522-a42e-46f6-9e27-9267cd35d0e1::'},\n",
+       "     'type': 'bmcos_object_storage'}},\n",
+       "   'metadata': {'created_at': '2022-11-15T00:09:37.156Z',\n",
+       "    'creator_id': 'IBMid-6640041QOE',\n",
+       "    'id': 'cd5202d8-0387-459f-b0c3-fa30c9666ed8',\n",
+       "    'updated_at': '2022-11-15T00:09:57.413Z',\n",
+       "    'url': '/v2/spaces/cd5202d8-0387-459f-b0c3-fa30c9666ed8'}}]}"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "client.spaces.get_details()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "233b22aa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def guid_from_space_name(client,digitrecognition):\n",
+    "  space = client.spaces.get_details()\n",
+    "  return (next(item for item in space['resources'] if item['entity']['name']==digitrecognition)['metadata']['id'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "780404f6",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Space UID = cd5202d8-0387-459f-b0c3-fa30c9666ed8\n"
+     ]
+    }
+   ],
+   "source": [
+    "space_uid = guid_from_space_name(client,'digitrecognition')\n",
+    "print(\"Space UID = \" + space_uid)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "0484efe6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'SUCCESS'"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "client.set.default_space(space_uid)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "cfacb7a7",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "-------------------------------  ------------------------------------  ----\n",
+      "NAME                             ASSET_ID                              TYPE\n",
+      "default_py3.6                    0062b8c9-8b7d-44a0-a9b9-46c416adcbd9  base\n",
+      "kernel-spark3.2-scala2.12        020d69ce-7ac1-5e68-ac1a-31189867356a  base\n",
+      "pytorch-onnx_1.3-py3.7-edt       069ea134-3346-5748-b513-49120e15d288  base\n",
+      "scikit-learn_0.20-py3.6          09c5a1d0-9c1e-4473-a344-eb7b665ff687  base\n",
+      "spark-mllib_3.0-scala_2.12       09f4cff0-90a7-5899-b9ed-1ef348aebdee  base\n",
+      "pytorch-onnx_rt22.1-py3.9        0b848dd4-e681-5599-be41-b5f6fccc6471  base\n",
+      "ai-function_0.1-py3.6            0cdb0f1e-5376-4f4d-92dd-da3b69aa9bda  base\n",
+      "shiny-r3.6                       0e6e79df-875e-4f24-8ae9-62dcc2148306  base\n",
+      "tensorflow_2.4-py3.7-horovod     1092590a-307d-563d-9b62-4eb7d64b3f22  base\n",
+      "pytorch_1.1-py3.6                10ac12d6-6b30-4ccd-8392-3e922c096a92  base\n",
+      "tensorflow_1.15-py3.6-ddl        111e41b3-de2d-5422-a4d6-bf776828c4b7  base\n",
+      "autoai-kb_rt22.2-py3.10          125b6d9a-5b1f-5e8d-972a-b251688ccf40  base\n",
+      "runtime-22.1-py3.9               12b83a17-24d8-5082-900f-0ab31fbfd3cb  base\n",
+      "scikit-learn_0.22-py3.6          154010fa-5b3b-4ac1-82af-4d5ee5abbc85  base\n",
+      "default_r3.6                     1b70aec3-ab34-4b87-8aa0-a4a3c8296a36  base\n",
+      "pytorch-onnx_1.3-py3.6           1bc6029a-cc97-56da-b8e0-39c3880dbbe7  base\n",
+      "kernel-spark3.3-r3.6             1c9e5454-f216-59dd-a20e-474a5cdf5988  base\n",
+      "pytorch-onnx_rt22.1-py3.9-edt    1d362186-7ad5-5b59-8b6c-9d0880bde37f  base\n",
+      "tensorflow_2.1-py3.6             1eb25b84-d6ed-5dde-b6a5-3fbdf1665666  base\n",
+      "spark-mllib_3.2                  20047f72-0a98-58c7-9ff5-a77b012eb8f5  base\n",
+      "tensorflow_2.4-py3.8-horovod     217c16f6-178f-56bf-824a-b19f20564c49  base\n",
+      "runtime-22.1-py3.9-cuda          26215f05-08c3-5a41-a1b0-da66306ce658  base\n",
+      "do_py3.8                         295addb5-9ef9-547e-9bf4-92ae3563e720  base\n",
+      "autoai-ts_3.8-py3.8              2aa0c932-798f-5ae9-abd6-15e0c2402fb5  base\n",
+      "tensorflow_1.15-py3.6            2b73a275-7cbf-420b-a912-eae7f436e0bc  base\n",
+      "kernel-spark3.3-py3.9            2b7961e2-e3b1-5a8c-a491-482c8368839a  base\n",
+      "pytorch_1.2-py3.6                2c8ef57d-2687-4b7d-acce-01f94976dac1  base\n",
+      "spark-mllib_2.3                  2e51f700-bca0-4b0d-88dc-5c6791338875  base\n",
+      "pytorch-onnx_1.1-py3.6-edt       32983cea-3f32-4400-8965-dde874a8d67e  base\n",
+      "spark-mllib_3.0-py37             36507ebe-8770-55ba-ab2a-eafe787600e9  base\n",
+      "spark-mllib_2.4                  390d21f8-e58b-4fac-9c55-d7ceda621326  base\n",
+      "autoai-ts_rt22.2-py3.10          396b2e83-0953-5b86-9a55-7ce1628a406f  base\n",
+      "xgboost_0.82-py3.6               39e31acd-5f30-41dc-ae44-60233c80306e  base\n",
+      "pytorch-onnx_1.2-py3.6-edt       40589d0e-7019-4e28-8daa-fb03b6f4fe12  base\n",
+      "pytorch-onnx_rt22.2-py3.10       40e73f55-783a-5535-b3fa-0c8b94291431  base\n",
+      "default_r36py38                  41c247d3-45f8-5a71-b065-8580229facf0  base\n",
+      "autoai-ts_rt22.1-py3.9           4269d26e-07ba-5d40-8f66-2d495b0c71f7  base\n",
+      "autoai-obm_3.0                   42b92e18-d9ab-567f-988a-4240ba1ed5f7  base\n",
+      "pmml-3.0_4.3                     493bcb95-16f1-5bc5-bee8-81b8af80e9c7  base\n",
+      "spark-mllib_2.4-r_3.6            49403dff-92e9-4c87-a3d7-a42d0021c095  base\n",
+      "xgboost_0.90-py3.6               4ff8d6c2-1343-4c18-85e1-689c965304d3  base\n",
+      "pytorch-onnx_1.1-py3.6           50f95b2a-bc16-43bb-bc94-b0bed208c60b  base\n",
+      "autoai-ts_3.9-py3.8              52c57136-80fa-572e-8728-a5e7cbb42cde  base\n",
+      "spark-mllib_2.4-scala_2.11       55a70f99-7320-4be5-9fb9-9edb5a443af5  base\n",
+      "spark-mllib_3.0                  5c1b0ca2-4977-5c2e-9439-ffd44ea8ffe9  base\n",
+      "autoai-obm_2.0                   5c2e37fa-80b8-5e77-840f-d912469614ee  base\n",
+      "spss-modeler_18.1                5c3cad7e-507f-4b2a-a9a3-ab53a21dee8b  base\n",
+      "cuda-py3.8                       5d3232bf-c86b-5df4-a2cd-7bb870a1cd4e  base\n",
+      "runtime-22.2-py3.10-xc           5e8cddff-db4a-5a6a-b8aa-2d4af9864dab  base\n",
+      "autoai-kb_3.1-py3.7              632d4b22-10aa-5180-88f0-f52dfb6444d7  base\n",
+      "pytorch-onnx_1.7-py3.8           634d3cdc-b562-5bf9-a2d4-ea90a478456b  base\n",
+      "spark-mllib_2.3-r_3.6            6586b9e3-ccd6-4f92-900f-0f8cb2bd6f0c  base\n",
+      "tensorflow_2.4-py3.7             65e171d7-72d1-55d9-8ebb-f813d620c9bb  base\n",
+      "spss-modeler_18.2                687eddc9-028a-4117-b9dd-e57b36f1efa5  base\n",
+      "pytorch-onnx_1.2-py3.6           692a6a4d-2c4d-45ff-a1ed-b167ee55469a  base\n",
+      "spark-mllib_2.3-scala_2.11       7963efe5-bbec-417e-92cf-0574e21b4e8d  base\n",
+      "spark-mllib_2.4-py37             7abc992b-b685-532b-a122-a396a3cdbaab  base\n",
+      "caffe_1.0-py3.6                  7bb3dbe2-da6e-4145-918d-b6d84aa93b6b  base\n",
+      "pytorch-onnx_1.7-py3.7           812c6631-42b7-5613-982b-02098e6c909c  base\n",
+      "cuda-py3.6                       82c79ece-4d12-40e6-8787-a7b9e0f62770  base\n",
+      "tensorflow_1.15-py3.6-horovod    8964680e-d5e4-5bb8-919b-8342c6c0dfd8  base\n",
+      "hybrid_0.1                       8c1a58c6-62b5-4dc4-987a-df751c2756b6  base\n",
+      "pytorch-onnx_1.3-py3.7           8d5d8a87-a912-54cf-81ec-3914adaa988d  base\n",
+      "caffe-ibm_1.0-py3.6              8d863266-7927-4d1e-97d7-56a7f4c0a19b  base\n",
+      "runtime-22.2-py3.10-cuda         8ef391e4-ef58-5d46-b078-a82c211c1058  base\n",
+      "spss-modeler_17.1                902d0051-84bd-4af6-ab6b-8f6aa6fdeabb  base\n",
+      "do_12.10                         9100fd72-8159-4eb9-8a0b-a87e12eefa36  base\n",
+      "do_py3.7                         9447fa8b-2051-4d24-9eef-5acb0e3c59f8  base\n",
+      "spark-mllib_3.0-r_3.6            94bb6052-c837-589d-83f1-f4142f219e32  base\n",
+      "cuda-py3.7-opence                94e9652b-7f2d-59d5-ba5a-23a414ea488f  base\n",
+      "nlp-py3.8                        96e60351-99d4-5a1c-9cc0-473ac1b5a864  base\n",
+      "cuda-py3.7                       9a44990c-1aa1-4c7d-baf8-c4099011741c  base\n",
+      "hybrid_0.2                       9b3f9040-9cee-4ead-8d7a-780600f542f7  base\n",
+      "spark-mllib_3.0-py38             9f7a8fc1-4d3c-5e65-ab90-41fa8de2d418  base\n",
+      "autoai-kb_3.3-py3.7              a545cca3-02df-5c61-9e88-998b09dc79af  base\n",
+      "spark-mllib_3.0-py39             a6082a27-5acc-5163-b02c-6b96916eb5e0  base\n",
+      "runtime-22.1-py3.9-do            a7e7dbf1-1d03-5544-994d-e5ec845ce99a  base\n",
+      "default_py3.8                    ab9e1b80-f2ce-592c-a7d2-4f2344f77194  base\n",
+      "tensorflow_rt22.1-py3.9          acd9c798-6974-5d2f-a657-ce06e986df4d  base\n",
+      "kernel-spark3.2-py3.9            ad7033ee-794e-58cf-812e-a95f4b64b207  base\n",
+      "autoai-obm_2.0 with Spark 3.0    af10f35f-69fa-5d66-9bf5-acb58434263a  base\n",
+      "runtime-22.2-py3.10              b56101f1-309d-549b-a849-eaa63f77b2fb  base\n",
+      "default_py3.7_opence             c2057dd4-f42c-5f77-a02f-72bdbd3282c9  base\n",
+      "tensorflow_2.1-py3.7             c4032338-2a40-500a-beef-b01ab2667e27  base\n",
+      "do_py3.7_opence                  cc8f8976-b74a-551a-bb66-6377f8d865b4  base\n",
+      "spark-mllib_3.3                  d11f2434-4fc7-58b7-8a62-755da64fdaf8  base\n",
+      "autoai-kb_3.0-py3.6              d139f196-e04b-5d8b-9140-9a10ca1fa91a  base\n",
+      "spark-mllib_3.0-py36             d82546d5-dd78-5fbb-9131-2ec309bc56ed  base\n",
+      "autoai-kb_3.4-py3.8              da9b39c3-758c-5a4f-9cfd-457dd4d8c395  base\n",
+      "kernel-spark3.2-r3.6             db2fe4d6-d641-5d05-9972-73c654c60e0a  base\n",
+      "autoai-kb_rt22.1-py3.9           db6afe93-665f-5910-b117-d879897404d9  base\n",
+      "tensorflow_rt22.1-py3.9-horovod  dda170cc-ca67-5da7-9b7a-cf84c6987fae  base\n",
+      "autoai-ts_1.0-py3.7              deef04f0-0c42-5147-9711-89f9904299db  base\n",
+      "tensorflow_2.1-py3.7-horovod     e384fce5-fdd1-53f8-bc71-11326c9c635f  base\n",
+      "default_py3.7                    e4429883-c883-42b6-87a8-f419d64088cd  base\n",
+      "do_22.1                          e51999ba-6452-5f1f-8287-17228b88b652  base\n",
+      "autoai-obm_3.2                   eae86aab-da30-5229-a6a6-1d0d4e368983  base\n",
+      "runtime-22.2-r4.2                ec0a3d28-08f7-556c-9674-ca7c2dba30bd  base\n",
+      "tensorflow_rt22.2-py3.10         f65bd165-f057-55de-b5cb-f97cf2c0f393  base\n",
+      "do_20.1                          f686cdd9-7904-5f9d-a732-01b0d6b10dc5  base\n",
+      "-------------------------------  ------------------------------------  ----\n"
+     ]
+    }
+   ],
+   "source": [
+    "client.software_specifications.list(limit=100)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "efdab463",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'acd9c798-6974-5d2f-a657-ce06e986df4d'"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "software_space_uid = client.software_specifications.get_uid_by_name('tensorflow_rt22.1-py3.9')\n",
+    "software_space_uid"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "e1e08957",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "model_details = client.repository.store_model(model='handwritten-digit-recognition-model_new.tgz',meta_props={\n",
+    "    client.repository.ModelMetaNames.NAME:\"CNN Digit recognition model\",\n",
+    "    client.repository.ModelMetaNames.TYPE:\"tensorflow_2.7\",\n",
+    "    client.repository.ModelMetaNames.SOFTWARE_SPEC_UID:software_space_uid\n",
+    "})"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "ca4a8b13",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'entity': {'hybrid_pipeline_software_specs': [],\n",
+       "  'software_spec': {'id': 'acd9c798-6974-5d2f-a657-ce06e986df4d',\n",
+       "   'name': 'tensorflow_rt22.1-py3.9'},\n",
+       "  'type': 'tensorflow_2.7'},\n",
+       " 'metadata': {'created_at': '2022-11-17T13:46:51.144Z',\n",
+       "  'id': '460f1182-1233-42dd-9cd1-0e7b35ba893d',\n",
+       "  'modified_at': '2022-11-17T13:46:54.353Z',\n",
+       "  'name': 'CNN Digit recognition model',\n",
+       "  'owner': 'IBMid-6640041QOE',\n",
+       "  'resource_key': 'd12608f9-12be-421d-92db-323cd5374b49',\n",
+       "  'space_id': 'cd5202d8-0387-459f-b0c3-fa30c9666ed8'},\n",
+       " 'system': {'warnings': []}}"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "model_details"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "68536e7a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'460f1182-1233-42dd-9cd1-0e7b35ba893d'"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "model_id = client.repository.get_model_id(model_details)\n",
+    "model_id\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "022bc884",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Successfully saved model content to file: 'HANDWRITTEN_DIGIT_RECOGNITION.tar.gb'\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "'/home/wsuser/work/HANDWRITTEN_DIGIT_RECOGNITION.tar.gb'"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "client.repository.download(model_id,\"HANDWRITTEN_DIGIT_RECOGNITION.tar.gb\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3.9",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
