@@ -6,7 +6,7 @@ from flask import Flask, request, render_template
 from keras.models import load_model
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = 'C:/Users/Aadi/PycharmProject/application/uploads'
+UPLOAD_FOLDER = 'C:/Users/Ansal/PycharmProject/application/uploads'
 
 
 app = Flask(__name__)
